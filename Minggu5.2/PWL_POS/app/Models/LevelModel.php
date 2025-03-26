@@ -10,4 +10,10 @@ class LevelModel extends Model
     use HasFactory;
     protected $table = 'm_level';
     protected $primaryKey = 'level_id';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['level_kode', 'level_nama'];
 }
