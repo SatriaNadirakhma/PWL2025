@@ -1,98 +1,120 @@
 @extends('layouts.template')
-@section('content')
 
+@section('content')
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
-        <div class="card-tools"></div>
+        <div class="card-tools">
+            <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+        </div>
     </div>
     <div class="card-body">
-        @if(isset($barang))
-            <form method="POST" action="{{ url('/barang/'.$barang->barang_id) }}" class="form-horizontal">
-                @csrf
-                {!! method_field('PUT') !!} <!-- Tambahkan baris ini untuk proses edit yang butuh method PUT -->
-
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Level</label>
-                    <div class="col-11">
-                        <select class="form-control" id="kategori_id" name="kategori_id" required>
-                            <option value="">- Pilih Level -</option>
-                            @foreach($kategori as $item)
-                                <option value="{{ $item->kategori_id }}"
-                                    @if($item->kategori_id == $barang->kategori_id) selected @endif>
-                                    {{ $item->kategori_nama }}
-                                </option>
+                    <label for="kategori_id" class="col-1 control-label col-form-label">Filter:</label>
+                    <div class="col-3">
+                        <select name="kategori_id" id="kategori_id" class="form-control" required>
+                            <option value="">- Semua -</option>
+                            @foreach ($kategori as $item)
+                                <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
                             @endforeach
                         </select>
-                        @error('kategori_id')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
+                        <small class="form-text text-muted">Kategori Barang</small>
                     </div>
                 </div>
-
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Barang Kode</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="barang_kode" name="barang_kode"
-                            value="{{ old('barang_kode', $barang->barang_kode) }}" required>
-                        @error('barang_kode')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Barang Nama</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="barang_nama" name="barang_nama"
-                            value="{{ old('barang_nama', $barang->barang_nama) }}" required>
-                        @error('barang_nama')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Harga Beli</label>
-                    <div class="col-11">
-                        <input type="number" class="form-control" id="harga_beli" name="harga_beli"
-                            value="{{ old('harga_beli', $barang->harga_beli) }}" required>
-                        @error('harga_beli')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Harga Jual</label>
-                    <div class="col-11">
-                        <input type="number" class="form-control" id="harga_jual" name="harga_jual"
-                            value="{{ old('harga_jual', $barang->harga_jual) }}" required>
-                        @error('harga_jual')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-11 offset-1">
-                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                        <a class="btn btn-sm btn-default ml-1" href="{{ url('barang') }}">Kembali</a>
-                    </div>
-                </div>
-
-            </form>
-        @else
-            <div class="alert alert-danger alert-dismissible">
-                <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
-                Data yang Anda cari tidak ditemukan.
             </div>
-            <a href="{{ url('barang') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
-        @endif
+        </div>
+        <table class="table table-bordered table-hover table-sm" id="table_barang">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Kode Barang</th>
+                    <th>Nama Barang</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
+                    <th>Kategori Barang</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
-
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
+<!-- Tambahkan custom CSS di sini jika diperlukan -->
 @endpush
+
 @push('js')
+<script>
+    function modalAction(url = ''){
+        $('#myModal').load(url,function(){
+            $('#myModal').modal('show');
+        });
+    }
+    var dataBarang
+    $(document).ready(function() {
+        dataBarang = $('#table_barang').DataTable({
+            serverSide: true,
+            ajax: {
+                url: "{{ url('barang/list') }}",
+                dataType: "json",
+                type: "POST",
+                "data": function (d) {
+                    d.kategori_id = $('#kategori_id').val();
+                }
+            },
+            columns: [
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "barang_kode",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "barang_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "harga_beli",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "harga_jual",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "kategori.kategori_nama",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "aksi",
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+        $('#kategori_id').on('change', function() {
+            dataBarang.ajax.reload();
+        });
+    });
+</script>
 @endpush
