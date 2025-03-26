@@ -41,3 +41,6 @@ Route::group(['prefix' => 'user'], function () {
     Route::put('/{id}', [UserController::class, 'update']); // menyimpan perubahan data user
     Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
 });
+
+Route::get('/users/data', [UserController::class, 'getData'])->name('users.data');
+Route::delete('/{id}', [UserController::class, 'destroy']);
