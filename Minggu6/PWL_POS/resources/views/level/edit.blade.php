@@ -7,81 +7,43 @@
         <div class="card-tools"></div>
     </div>
     <div class="card-body">
-        @empty($user)
+        @empty($level)
             <div class="alert alert-danger alert-dismissible">
                 <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                 Data yang Anda cari tidak ditemukan.
             </div>
-            <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+            <a href="{{ url('level') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         @else
-            <form method="POST" action="{{ url('/user/'.$user->user_id) }}" class="form-horizontal">
+            <form method="POST" action="{{ url('/level/'.$level->level_id) }}" class="form-horizontal">
                 @csrf
-                {!! method_field('PUT') !!} <!-- Tambahkan method PUT untuk proses edit -->
+                {!! method_field('PUT') !!}
+                <!-- tambahkan baris ini untuk proses edit yang butuh method PUT -->
 
-                <!-- Level -->
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Level</label>
+                    <label class="col-1 control-label col-form-label">Kode Level</label>
                     <div class="col-11">
-                        <select class="form-control" id="level_id" name="level_id" required>
-                            <option value="">- Pilih Level -</option>
-                            @foreach($level as $item)
-                                <option value="{{ $item->level_id }}" 
-                                    @if($item->level_id == $user->level_id) selected @endif>
-                                    {{ $item->level_nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('level_id')
+                        <input type="text" class="form-control" id="level_kode" name="level_kode" value="{{ old('level_kode', $level->level_kode) }}" required>
+                        @error('level_kode')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
 
-                <!-- Username -->
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Username</label>
+                    <label class="col-1 control-label col-form-label">Nama Level</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="username" name="username" 
-                            value="{{ old('username', $user->username) }}" required>
-                        @error('username')
+                        <input type="text" class="form-control" id="level_nama" name="level_nama" value="{{ old('level_nama', $level->level_nama) }}" required>
+                        @error('level_nama')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
 
-                <!-- Nama -->
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Nama</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="nama" name="nama" 
-                            value="{{ old('nama', $user->nama) }}" required>
-                        @error('nama')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Password -->
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Password</label>
-                    <div class="col-11">
-                        <input type="password" class="form-control" id="password" name="password">
-                        @error('password')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @else
-                            <small class="form-text text-muted">
-                                Abaikan (jangan diisi) jika tidak ingin mengganti password user.
-                            </small>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Tombol Simpan & Kembali -->
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label"></label>
                     <div class="col-11">
                         <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                        <a class="btn btn-sm btn-default ml-1" href="{{ url('user') }}">Kembali</a>
+                        <a class="btn btn-sm btn-default ml-1" href="{{ url('level') }}">Kembali</a>
                     </div>
                 </div>
             </form>

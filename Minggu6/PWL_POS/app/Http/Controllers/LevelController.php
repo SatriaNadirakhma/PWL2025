@@ -230,6 +230,8 @@ class LevelController extends Controller
                 ]);
             }
         }
+
         return redirect('/');
+        
     }
 }

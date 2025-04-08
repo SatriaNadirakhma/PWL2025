@@ -129,5 +129,6 @@
                 }
             });
         });
+    
     </script>
 @endempty
