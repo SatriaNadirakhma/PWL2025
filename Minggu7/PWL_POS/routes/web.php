@@ -30,7 +30,8 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middle
 Route::middleware(['auth'])->group(function () {
     // Masukkan semua route yang perlu autentikasi di sini
 
-    Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index']);
+
     Route::group(['prefix' => 'user'], function () {
     Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
     Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk JSON untuk DataTables
@@ -82,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/{id}', [KategoriController::class, 'destroy']); // menghapus data kategori
     });
 
-    Route::group(['prefix' => 'level'], function () {
+    Route::middleware(['authorize:ADM'])->group(function() {
     Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal Level
     Route::post('/list', [LevelController::class, 'list']); // menampilkan data Level dalam bentuk json untuk datatables
     Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah Level
