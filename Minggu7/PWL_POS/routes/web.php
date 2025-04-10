@@ -21,30 +21,17 @@ use App\Http\Controllers\SupplierController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/level', [LevelController::class, 'index']);
-// Route::get('/kategori', [KategoriController::class, 'index']);
-// Route::get('/user', [UserController::class, 'index']);
-// Route::get('/user/tambah', [UserController::class, 'tambah']);
-// Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
-// Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
-// Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
-// Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
-
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin']);
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     // Masukkan semua route yang perlu autentikasi di sini
 
-Route::get('/', [WelcomeController::class, 'index']);
-Route::group(['prefix' => 'user'], function () {
+    Route::get('/', [WelcomeController::class, 'index']);
+    Route::group(['prefix' => 'user'], function () {
     Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
     Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk JSON untuk DataTables
     Route::get('/create', [UserController::class, 'create']); // menampilkan halaman form tambah user
@@ -59,9 +46,9 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']); // menampilkan halaman form delete user Ajax
     Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // Menghapus data user Ajax
     Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
-});
+    });
 
-Route::group(['prefix' => 'barang'], function () {
+    Route::group(['prefix' => 'barang'], function () {
     Route::get('/', [BarangController::class, 'index']); // menampilkan halaman awal Barang
     Route::post('/list', [BarangController::class, 'list']); // menampilkan data Barang dalam bentuk json untuk datatables
     Route::get('/create', [BarangController::class, 'create']); // menampilkan halaman form tambah Barang
@@ -76,9 +63,9 @@ Route::group(['prefix' => 'barang'], function () {
     Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']); // menampilkan halaman form delete barang Ajax
     Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']); // Menghapus data barang Ajax
     Route::delete('/{id}', [BarangController::class, 'destroy']); // menghapus data barang
-});
+    });
 
-Route::group(['prefix' => 'kategori'], function () {
+    Route::group(['prefix' => 'kategori'], function () {
     Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal Kategori
     Route::post('/list', [KategoriController::class, 'list']); // menampilkan data Kategori dalam bentuk json untuk datatables
     Route::get('/create', [KategoriController::class, 'create']); // menampilkan halaman form tambah Kategori
@@ -93,9 +80,9 @@ Route::group(['prefix' => 'kategori'], function () {
     Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']); // menampilkan halaman form delete kategori Ajax
     Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']); // Menghapus data kategori Ajax
     Route::delete('/{id}', [KategoriController::class, 'destroy']); // menghapus data kategori
-});
+    });
 
-Route::group(['prefix' => 'level'], function () {
+    Route::group(['prefix' => 'level'], function () {
     Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal Level
     Route::post('/list', [LevelController::class, 'list']); // menampilkan data Level dalam bentuk json untuk datatables
     Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah Level
@@ -110,9 +97,9 @@ Route::group(['prefix' => 'level'], function () {
     Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // menampilkan halaman form delete level Ajax
     Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // Menghapus data level Ajax
     Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data level
-});
+    });
 
-Route::group(['prefix' => 'supplier'], function () {
+    Route::group(['prefix' => 'supplier'], function () {
     Route::get('/',[SupplierController::class, 'index']);
     Route::post('/list',[SupplierController::class, 'list']);
     Route::get('/create',[SupplierController::class, 'create']);
@@ -127,7 +114,7 @@ Route::group(['prefix' => 'supplier'], function () {
     Route::delete('/{id}',[SupplierController::class, 'destroy']);
     Route::get('/{id}/delete_ajax',[SupplierController::class, 'confirm_ajax']);
     Route::delete('/{id}/delete_ajax',[SupplierController::class, 'delete_ajax']);
-});
+    });
 
 });
 
