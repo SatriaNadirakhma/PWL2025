@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +16,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 </head>
+
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="card card-outline card-primary">
@@ -42,6 +44,11 @@
                             </div>
                         </div>
                         <small id="error-password" class="error-text text-danger"></small>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>Don't have an account? <a href="{{ url('register') }}">Register Here</a></p>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-8">
@@ -81,8 +88,16 @@
         $(document).ready(function() {
             $("#form-login").validate({
                 rules: {
-                    username: { required: true, minlength: 4, maxlength: 20 },
-                    password: { required: true, minlength: 5, maxlength: 20 }
+                    username: {
+                        required: true,
+                        minlength: 4,
+                        maxlength: 20
+                    },
+                    password: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 20
+                    }
                 },
                 submitHandler: function(form) {
                     $.ajax({
@@ -90,7 +105,7 @@
                         type: form.method,
                         data: $(form).serialize(),
                         success: function(response) {
-                            if(response.status) {
+                            if (response.status) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
@@ -101,7 +116,7 @@
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
-                                    $('#error-'+prefix).text(val[0]);
+                                    $('#error-' + prefix).text(val[0]);
                                 });
                                 Swal.fire({
                                     icon: 'error',
@@ -128,4 +143,5 @@
         });
     </script>
 </body>
+
 </html>
