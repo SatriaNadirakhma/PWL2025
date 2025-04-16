@@ -109,4 +109,8 @@ Route::get('/', [WelcomeController::class, 'index']);
         Route::get('/export_pdf', [SupplierController::class, 'export_pdf']);
     });
 
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/profile', [UserController::class, 'profile_page']);
+        Route::post('/update_picture', [UserController::class, 'update_picture']);
+    });
 });
