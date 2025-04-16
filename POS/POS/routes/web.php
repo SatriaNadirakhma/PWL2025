@@ -127,7 +127,7 @@ Route::get('/', [WelcomeController::class, 'index']);
         Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
     });
 
-    Route::middleware(['authorize:ADM,MNG,STF'])->prefix('penjualan_detail')->group(function() {
+    Route::middleware(['authorize:ADM,MNG,STF'])->prefix('penjualandetail')->group(function() {
         Route::get('/',[PenjualanDetailController::class, 'index']);
         Route::post('/list',[PenjualanDetailController::class, 'list']);
         Route::get('/create_ajax',[PenjualanDetailController::class, 'create_ajax']);

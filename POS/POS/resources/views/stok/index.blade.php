@@ -5,9 +5,9 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Supplier (PDF)</a>
-                <button onclick="modalAction('{{ url('/stok/import') }}')" class="btn btn-info">Import Supplier</button>
-                <a href="{{ url('/stok/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i>Export Supplier</a>
+                <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export stok (PDF)</a>
+                <button onclick="modalAction('{{ url('/stok/import') }}')" class="btn btn-info">Import stok</button>
+                <a href="{{ url('/stok/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i>Export stok</a>
                 <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
             </div>
         </div>
@@ -17,15 +17,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group form-group-sm row text-sm mb-0">
-                            <label for="filter_supplier" class="col-md-1 col-form-label">Filter</label>
+                            <label for="filter_stok" class="col-md-1 col-form-label">Filter</label>
                             <div class="col-md-3">
-                                <select name="filter_supplier" class="form-control form-control-sm filter_supplier">
+                                <select name="filter_stok" class="form-control form-control-sm filter_stok">
                                     <option value="">- Semua -</option>
                                     @foreach($barang as $item)
                                         <option value="{{ $item->barang_id }}">{{ $item->barang_nama }}</option>
                                     @endforeach
                                 </select>
-                                <small class="form-text text-muted">Nama Supplier</small>
                             </div>
                         </div>
                     </div>
@@ -45,7 +44,6 @@
                     <tr>
                         <th>No</th>
                         <th>Petugas</th>
-                        <th>Nama Supplier</th>
                         <th>Nama Barang</th>
                         <th>Tanggal Stok</th>
                         <th>Jumlah Stok</th>
@@ -76,7 +74,7 @@
                 url: "{{ url('stok/list') }}",
                 type: "POST",
                 data: function (d) {
-                    d.filter_supplier = $('.filter_supplier').val();
+                    d.filter_stok = $('.filter_stok').val();
                 }
             },
             columns: [
@@ -91,13 +89,6 @@
                     data: "user.nama",
                     className: "",
                     width: "15%",
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: "supplier.supplier_nama",
-                    className: "",
-                    width: "20%",
                     orderable: true,
                     searchable: true
                 },
@@ -136,10 +127,6 @@
             if (e.keyCode == 13) {
                 tableStok.search(this.value).draw();
             }
-        });
-
-        $('.filter_supplier').change(function() {
-            tableStok.draw();
         });
     });
 </script>

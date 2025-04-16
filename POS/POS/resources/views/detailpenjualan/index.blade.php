@@ -5,10 +5,10 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-            <a href="{{ url('/penjualan/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export penjualan (PDF)</a>
-                <button onclick="modalAction('{{ url('/penjualan/import') }}')" class="btn btn-info">Import penjualan</button>
-                <a href="{{ url('/penjualan/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i>Export penjualan</a>
-                <button onclick="modalAction('{{ url('/penjualan/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
+            <a href="{{ url('/penjualandetail/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export penjualandetail (PDF)</a>
+                <button onclick="modalAction('{{ url('/penjualandetail/import') }}')" class="btn btn-info">Import penjualandetail</button>
+                <a href="{{ url('/penjualandetail/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i>Export penjualandetail</a>
+                <button onclick="modalAction('{{ url('/penjualandetail/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
             </div>
         </div>
         <div class="card-body">            
@@ -20,13 +20,14 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
             
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-penjualan">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table-penjualandetail">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode penjualan</th>
-                        <th>pembeli</th>
-                        <th>tanggal</th>
+                        <th>detail_id</th>
+                        <th>penjualan_id</th>
+                        <th>barang_id</th>
+                        <th>harga</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -44,13 +45,13 @@
                 $('#myModal').modal('show');
             });
         }
-        var tablepenjualan;
+        var tablepenjualandetail;
         $(document).ready(function() {
-            tablepenjualan = $('#table-penjualan').DataTable({
+            tablepenjualandetail = $('#table-penjualandetail').DataTable({
                 processing: true,
                 serverSide: true, 
                 ajax: {
-                    "url": "{{ url('penjualan/list') }}",
+                    "url": "{{ url('penjualandetail/list') }}",
                     "dataType": "json",
                     "type": "POST",
                 },
@@ -63,21 +64,28 @@
                         searchable: false
                     },
                     {
-                        data: "penjualan_kode",
+                        data: "detail_id",
                         className: "",
                         width: "10%",
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "nama_pembeli",
+                        data: "penjualan_id",
                         className: "",
                         width: "37%",
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "penjualan_tanggal",
+                        data: "barang_id",
+                        className: "",
+                        width: "10%",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "harga",
                         className: "",
                         width: "10%",
                         orderable: true,
@@ -93,9 +101,9 @@
                 ]
             });
 
-            $('#table-penjualan_filter input').unbind().bind().on('keyup', function(e) {
+            $('#table-penjualandetail_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key
-                    tablepenjualan.search(this.value).draw();
+                    tablepenjualandetail.search(this.value).draw();
                 }
             });
         });
