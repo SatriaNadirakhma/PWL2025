@@ -131,5 +131,13 @@
           <i class="fas fa-th-large"></i>
         </a>
       </li>
+      <li class="nav-item">
+        <form action="{{ route('logout') }}" method="POST">
+          @csrf
+          <button type="submit" class="nav-link text-danger btn btn-link">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </button>
+        </form>
+      </li>
     </ul>
   </nav>
