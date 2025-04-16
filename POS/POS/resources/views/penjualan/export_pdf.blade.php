@@ -89,22 +89,20 @@
         <thead>
             <tr>
                 <th class="text-center">No</th>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th class="text-right">Harga Beli</th>
-                <th class="text-right">Harga Jual</th>
-                <th>Kategori</th>
+                <th>ID User</th>
+                <th>Nama Pembeli</th>
+                <th class="text-right">Kode Penjualan</th>
+                <th class="text-right">Tanggal Penjualan</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($barang as $b)
+            @foreach($penjualan as $p)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $b->barang_kode }}</td>
-                    <td>{{ $b->barang_nama }}</td>
-                    <td class="text-right">{{ number_format($b->harga_beli, 0, ',', '.') }}</td>
-                    <td class="text-right">{{ number_format($b->harga_jual, 0, ',', '.') }}</td>
-                    <td>{{ $b->kategori->kategori_nama }}</td>
+                    <td>{{ $p->user_id }}</td>
+                    <td>{{ $p->nama_pembeli }}</td>
+                    <td class="text-right">{{ number_format($p->penjualan_kode, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($p->penjualan_tanggal, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
