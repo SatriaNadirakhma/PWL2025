@@ -75,6 +75,12 @@
                     <p>Penjualan Detail</p>
                 </a>
             </li>
+            <li class="nav-item fixed-bottom mx-2">
+                <a href="{{ url('/user/profile') }}" class="nav-link {{ ($activeMenu == 'profile')? 'active' : '' }} ">
+                <i class="nav-icon fas fa-user-circle"></i>
+                    <p> User Profile</p>
+                </a>
+            </li>
         </ul>
     </nav>
       <!-- /.sidebar-menu -->
