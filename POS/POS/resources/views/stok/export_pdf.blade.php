@@ -81,7 +81,6 @@
             <thead>
                 <tr>
                     <th class="text-center">No</th>
-                    <th>Nama Supplier</th>
                     <th>Nama Barang</th>
                     <th>Petugas</th>
                     <th class="text-center">Tanggal</th>
@@ -92,7 +91,6 @@
                 @foreach($stok as $s)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $s->supplier->supplier_nama }}</td>
                         <td>{{ $s->barang->barang_nama }}</td>
                         <td>{{ $s->user->nama }}</td>
                         <td class="text-center">{{ date('d-m-Y', strtotime($s->stok_tanggal)) }}</td>

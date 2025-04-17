@@ -68,6 +68,7 @@ class StokController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'barang_id' => 'required|integer|exists:m_barang,barang_id',
+            'user_id' => 'required|integer|exists:m_user,user_id',
             'stok_tanggal' => 'required|date',
             'stok_jumlah' => 'required|integer|min:1'
         ]);
@@ -119,6 +120,7 @@ class StokController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'barang_id' => 'required|integer|exists:m_barang,barang_id',
+            'user_id' => 'required|integer|exists:m_user,user_id',
             'stok_tanggal' => 'required|date',
             'stok_jumlah' => 'required|integer|min:1'
         ]);
@@ -151,22 +153,30 @@ class StokController extends Controller
         }
     }
 
-    public function delete_ajax($id)
+    public function confirm_ajax(string $id)
     {
-        try {
-            $stok = StokModel::findOrFail($id);
-            $stok->delete();
+        $stok = StokModel::find($id);
+        return view('stok.confirm_ajax', ['stok' => $stok]);
+    }
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Data stok berhasil dihapus'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Gagal menghapus data: '.$e->getMessage()
-            ], 500);
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $stok = StokModel::find($id);
+            if ($stok) {
+                $stok->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
         }
+        return redirect('/');  
     }
 
     public function import()
@@ -263,8 +273,8 @@ class StokController extends Controller
 
     public function export_pdf()
     {
-        $stoks = StokModel::with(['barang', 'user'])->get();
-        $pdf = Pdf::loadView('stok.export_pdf', compact('stoks'));
+        $stok = StokModel::with(['barang', 'user'])->get();
+        $pdf = Pdf::loadView('stok.export_pdf', compact('stok'));
         return $pdf->stream('data_stok_'.date('Ymd_His').'.pdf');
     }
 }

@@ -10,17 +10,6 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Supplier</label>
-                    <select name="supplier_id" class="form-control" required>
-                        <option value="">- Pilih Supplier -</option>
-                        @foreach($supplier as $s)
-                            <option value="{{ $s->supplier_id }}">{{ $s->supplier_nama }}</option>
-                        @endforeach    
-                    </select>    
-                    <small id="error-supplier_id" class="error-text form-text text-danger"></small>
-                </div>    
-
-                <div class="form-group">
                     <label>Barang</label>
                     <select name="barang_id" class="form-control" required>
                         <option value="">- Pilih Barang -</option>
@@ -28,8 +17,18 @@
                             <option value="{{ $b->barang_id }}">{{ $b->barang_nama }}</option>
                         @endforeach    
                     </select>    
-                    <small id="error-barang_id" class="error-text form-text text-danger"></small>
                 </div>    
+
+                <div class="form-group">
+                    <label>Petugas</label>
+                    <select name="m_user" id="user_id" class="form-control" required>
+                        <option value="">- Pilih User -</option>
+                        @foreach($user as $u)
+                            <option value="{{ $u->user_id }}">{{ $u->nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-level_id" class="error-text form-text text-danger"></small>
+                </div>
 
                 <div class="form-group">
                     <label>Tanggal Stok</label>
@@ -55,8 +54,8 @@
     $(document).ready(function() {
         $("#form-tambah").validate({
             rules: {
-                supplier_id: { required: true },
                 barang_id: { required: true },
+                user_id:{ required: true },
                 stok_tanggal: { required: true},
                 stok_jumlah: { required: true, digits: true }
             },

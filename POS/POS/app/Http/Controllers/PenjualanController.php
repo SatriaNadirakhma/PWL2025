@@ -39,6 +39,8 @@ class PenjualanController extends Controller
             })
             ->addColumn('aksi', function ($penjualan) { 
                 $btn = '<button onclick="modalAction(\''.url('/penjualan/' . $penjualan->penjualan_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button>';
+                $btn = '<button onclick="modalAction(\''.url('/penjualan/' . $penjualan->penjualan_id . '/edit_ajax').'\')" class="btn btn-info btn-sm">Edit</button>';
+                $btn = '<button onclick="modalAction(\''.url('/penjualan/' . $penjualan->penjualan_id . '/delete_ajax').'\')" class="btn btn-info btn-sm">Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -94,6 +96,80 @@ class PenjualanController extends Controller
         $penjualan = PenjualanModel::with(['user', 'detail.barang'])->findOrFail($id);
         return view('penjualan.show_ajax', compact('penjualan'));
     }
+
+    public function edit_ajax(string $id)
+{
+    $penjualan = PenjualanModel::find($id);
+    $users = UserModel::select('user_id', 'nama')->get();
+
+    return view('penjualan.edit_ajax', [
+        'penjualan' => $penjualan,
+        'users' => $users
+    ]);
+}
+public function update_ajax(Request $request, $id)
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'nama_pembeli' => 'required|string|min:3|max:100',
+            'penjualan_tanggal' => 'required|date',
+            'user_id' => 'required|integer'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        $penjualan = PenjualanModel::find($id);
+        if ($penjualan) {
+            $penjualan->update([
+                'nama_pembeli' => $request->nama_pembeli,
+                'penjualan_tanggal' => $request->penjualan_tanggal,
+                'user_id' => $request->user_id
+            ]);
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data penjualan berhasil diupdate'
+            ]);
+        } else {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
+    return redirect('/');
+}
+public function confirm_ajax(string $id)
+{
+    $penjualan = PenjualanModel::find($id);
+    return view('penjualan.confirm_ajax', ['penjualan' => $penjualan]);
+}
+public function delete_ajax(Request $request, $id)
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $penjualan = PenjualanModel::find($id);
+        if ($penjualan) {
+            $penjualan->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data penjualan berhasil dihapus'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
+    return redirect('/');
+}   
 
     public function import()
     {

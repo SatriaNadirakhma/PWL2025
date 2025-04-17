@@ -1,11 +1,8 @@
 <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="adminlte\dist\img\user8-128x128.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
         <div class="info">
-          <a href="#" class="d-block">Satria Rakhmadani</a>
+          <a href="#" class="d-block">Selamat Datang!</a>
         </div>
       </div>
       
@@ -57,7 +54,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/supplier') }}" class="nav-link {{ ($activeMenu == 'supplier') ? 'active' : '' }}">
+                <a href="{{ url('/supplier') }}" class="nav-link {{ ($activeMenu == 'supplier')? 'active' : '' }}">
                     <i class="nav-icon fas fa-box"></i> <!-- Ikon box untuk barang -->
                     <p>Supplier Barang</p>
                 </a>
@@ -76,15 +73,18 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/penjualandetail') }}" class="nav-link {{ ($activeMenu == 'penjualandetail')? 'active' : '' }} ">
+                <a href="{{ url('/penjualandetail') }}" class="nav-link {{ ($activeMenu == 'detailPenjualan ')? 'active' : '' }} ">
                 <i class="nav-icon fas fa-chart-bar"></i>
                     <p>Penjualan Detail</p>
                 </a>
             </li>
             <li class="nav-item fixed-bottom mx-2">
                 <a href="{{ url('/user/profile') }}" class="nav-link {{ ($activeMenu == 'profile')? 'active' : '' }} ">
-                <i class="nav-icon fas fa-user-circle"></i>
-                    <p> User Profile</p>
+                    <img src="{{ auth()->user()->profile_picture ? asset('storage/'.auth()->user()->profile_picture) : asset('storage/profiles/profile_default.png') }}" 
+                    class="img-circle elevation-2 mr-2" 
+                    alt="User Image" 
+                    style="width: 30px; height: 30px; object-fit: cover;">
+                    <p> Satria Rakhmadani </p>
                 </a>
             </li>
         </ul>

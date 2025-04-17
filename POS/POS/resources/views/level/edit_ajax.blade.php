@@ -1,80 +1,101 @@
-@extends('layouts.template')
-
-@section('content')
-<div class="card card-outline card-primary">
-    <div class="card-header">
-        <h3 class="card-title">{{ $page->title }}</h3>
-        <div class="card-tools">
-            <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
-            <button onclick="modalAction('{{ url('/level/create_ajax/') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+@empty($level)
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
+                    Data yang anda cari tidak ditemukan
+                </div>
+                <a href="{{ url('/level') }}" class="btn btn-warning">Kembali</a>
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-        <table class="table table-bordered table-hover table-sm" id="table_level">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Kode Level</th>
-                    <th>Nama Level</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
-<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
-@endsection
+@else
+    <form action="{{ url('/level/' . $level->level_id . '/update_ajax') }}" method="POST" id="form-edit">
+        @csrf
+        @method('PUT')
+        <div id="modal-master" class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Level</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Kode Level</label>
+                        <input type="text" name="level_kode" id="level_kode" class="form-control" value="{{ $level->level_kode }}" required>
+                        <small id="error-level_kode" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Level</label>
+                        <input type="text" name="level_nama" id="level_nama" class="form-control" value="{{ $level->level_nama }}" required>
+                        <small id="error-level_nama" class="error-text form-text text-danger"></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </form>
 
-@push('css')
-<!-- Tambahkan custom CSS di sini jika diperlukan -->
-@endpush
-
-@push('js')
-<script>
-    function modalAction(url = ''){
-        $('#myModal').load(url,function(){
-            $('#myModal').modal('show');
-        });
-    }
-    var dataLevel;
-    $(document).ready(function() {
-        dataLevel = $('#table_level').DataTable({
-            serverSide: true,
-            ajax: {
-                url: "{{ url('level/list') }}",
-                dataType: "json",
-                type: "POST"
-            },
-            columns: [
-                {
-                    data: "DT_RowIndex",
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false
+    <script>
+        $(document).ready(function() {
+            $("#form-edit").validate({
+                rules: {
+                    level_kode: { required: true, minlength: 3, maxlength: 20 },
+                    level_nama: { required: true, minlength: 3, maxlength: 100 }
                 },
-                {
-                    data: "level_kode",
-                    orderable: true,
-                    searchable: true
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            if (response.status) {
+                                $('#myModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.message
+                                });
+                                dataLevel.ajax.reload(); 
+                            } else {
+                                $('.error-text').text('');
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Terjadi Kesalahan',
+                                    text: response.message
+                                });
+                            }
+                        }
+                    });
+                    return false;
                 },
-                {
-                    data: "level_nama",
-                    orderable: true,
-                    searchable: true
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
                 },
-                {
-                    data: "aksi",
-                    orderable: false,
-                    searchable: false
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
                 }
-            ]
+            });
         });
-    });
-</script>
-@endpush
+    </script>
+@endempty

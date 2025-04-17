@@ -24,8 +24,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>ID Supplier</th>
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
+                        <th>Alamat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -62,6 +64,13 @@
                         searchable: false
                     },
                     {
+                        data: "supplier_id",
+                        className: "",
+                        width: "10%",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
                         data: "supplier_kode",
                         className: "",
                         width: "10%",
@@ -71,7 +80,14 @@
                     {
                         data: "supplier_nama",
                         className: "",
-                        width: "37%",
+                        width: "25%",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "supplier_alamat",
+                        className: "",
+                        width: "20%",
                         orderable: true,
                         searchable: true
                     },

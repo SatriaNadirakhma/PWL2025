@@ -36,10 +36,6 @@
                     </div>
                     <table class="table table-bordered table-sm">
                         <tr>
-                            <th>Supplier</th>
-                            <td>{{ $stok->supplier->supplier_nama }}</td>
-                        </tr>
-                        <tr>
                             <th>Barang:</th>
                             <td>{{ $stok->barang->barang_nama }}</td>
                         </tr>
